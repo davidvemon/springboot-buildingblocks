@@ -10,16 +10,19 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.*;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;;
+import javax.validation.constraints.Size;
+
+import org.springframework.hateoas.RepresentationModel;
+
 
 //Entity
 @Entity
 @Table(name = "user")
-public class User {
+public class User extends RepresentationModel<User> {
 	
 	@Id
 	@GeneratedValue
-	private Long id;
+	private Long userid;
 	
 	@NotEmpty(message="Username is mandatory field. Please provide an username.")
 	@Column(name="USER_NAME", length=50, nullable=false, unique=true)
@@ -46,22 +49,29 @@ public class User {
 	
 	public User() {}
 
-	public User(Long id, String username, String firstname, String lastname, String email, String role, String ssn) {
-		this.id = id;
+	public User(Long userid,
+			@NotEmpty(message = "Username is mandatory field. Please provide an username.") String username,
+			@Size(min = 2, message = "First name should have at least 2 characters.") String firstname, String lastname,
+			String email, String role, String ssn, List<Order> orders) {
+		super();
+		this.userid = userid;
 		this.username = username;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.email = email;
 		this.role = role;
 		this.ssn = ssn;
+		this.orders = orders;
 	}
 
-	public Long getId() {
-		return id;
+
+
+	public Long getUserid() {
+		return userid;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setUserid(Long userid) {
+		this.userid = userid;
 	}
 
 	public String getUsername() {
@@ -122,9 +132,11 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname
-				+ ", email=" + email + ", role=" + role + ", ssn=" + ssn + "]";
+		return "User [userid=" + userid + ", username=" + username + ", firstname=" + firstname + ", lastname="
+				+ lastname + ", email=" + email + ", role=" + role + ", ssn=" + ssn + ", orders=" + orders + "]";
 	}
+
+	
 	
 	
 
